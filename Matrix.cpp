@@ -422,6 +422,10 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& q)
 	float xy = nq.x * nq.y;
 	float xz = nq.x * nq.z;
 	float yz = nq.y * nq.z;
+
+	float cosTheta = std::cos(nq.w);
+	float sinTheta = std::sin(nq.w);
+
 	//float wx = nq.w * nq.x;
 	//float wy = nq.w * nq.y;
 	//float wz = nq.w * nq.z;
@@ -447,19 +451,19 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& q)
 	matrix.m[3][3] = 1.0f;
 	*/
 
-	matrix.m[0][0] = xx * (1 - std::cos(nq.w)) + std::cos(nq.w);
-	matrix.m[1][0] = xy * (1 - std::cos(nq.w)) - nq.z * std::sin(nq.w);
-	matrix.m[2][0] = xz * (1 - std::cos(nq.w)) + nq.y * std::sin(nq.w);
+	matrix.m[0][0] = xx * (1 - cosTheta) + cosTheta;
+	matrix.m[1][0] = xy * (1 - cosTheta) - nq.z * sinTheta;
+	matrix.m[2][0] = xz * (1 - cosTheta) + nq.y * sinTheta;
 	matrix.m[3][0] = 0.0f;
 
-	matrix.m[0][1] = xy * (1 - std::cos(nq.w)) + nq.z * std::sin(nq.w);
-	matrix.m[1][1] = yy * (1 - std::cos(nq.w)) + std::cos(nq.w);
-	matrix.m[2][1] = yz * (1 - std::cos(nq.w)) - nq.x * std::sin(nq.w);
+	matrix.m[0][1] = xy * (1 - cosTheta) + nq.z * sinTheta;
+	matrix.m[1][1] = yy * (1 - cosTheta) + cosTheta;
+	matrix.m[2][1] = yz * (1 - cosTheta) - nq.x * sinTheta;
 	matrix.m[3][1] = 0.0f;
 
-	matrix.m[0][2] = xz * (1 - std::cos(nq.w)) - nq.y * std::sin(nq.w);
-	matrix.m[1][2] = yz * (1 - std::cos(nq.w)) + nq.x * std::sin(nq.w);
-	matrix.m[2][2] = zz * (1 - std::cos(nq.w)) + std::cos(nq.w);
+	matrix.m[0][2] = xz * (1 - cosTheta) - nq.y * sinTheta;
+	matrix.m[1][2] = yz * (1 - cosTheta) + nq.x * sinTheta;
+	matrix.m[2][2] = zz * (1 - cosTheta) + cosTheta;
 	matrix.m[3][2] = 0.0f;
 
 	matrix.m[0][3] = 0.0f;

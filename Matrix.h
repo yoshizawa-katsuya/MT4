@@ -64,6 +64,8 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& q);
 
 Matrix4x4 MakeRotateMatrix(const Vector3& axis, float angle);
 
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+
 //アフィン変換
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 

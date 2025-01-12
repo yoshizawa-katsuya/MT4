@@ -412,23 +412,21 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 Matrix4x4 MakeRotateMatrix(const Quaternion& q)
 {
 
-	Quaternion nq = q;
-
 	Matrix4x4 matrix;
 	
-	float xx = nq.x * nq.x;
-	float yy = nq.y * nq.y;
-	float zz = nq.z * nq.z;
-	float xy = nq.x * nq.y;
-	float xz = nq.x * nq.z;
-	float yz = nq.y * nq.z;
+	float xx = q.x * q.x;
+	float yy = q.y * q.y;
+	float zz = q.z * q.z;
+	float xy = q.x * q.y;
+	float xz = q.x * q.z;
+	float yz = q.y * q.z;
 
-	float cosTheta = std::cos(nq.w);
-	float sinTheta = std::sin(nq.w);
+	float cosTheta = std::cos(q.w);
+	float sinTheta = std::sin(q.w);
 
-	//float wx = nq.w * nq.x;
-	//float wy = nq.w * nq.y;
-	//float wz = nq.w * nq.z;
+	//float wx = q.w * q.x;
+	//float wy = q.w * q.y;
+	//float wz = q.w * q.z;
 	/*
 	matrix.m[0][0] = 1.0f - 2.0f * (yy + zz);
 	matrix.m[0][1] = 2.0f * (xy - wz);
@@ -452,17 +450,17 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& q)
 	*/
 
 	matrix.m[0][0] = xx * (1 - cosTheta) + cosTheta;
-	matrix.m[1][0] = xy * (1 - cosTheta) - nq.z * sinTheta;
-	matrix.m[2][0] = xz * (1 - cosTheta) + nq.y * sinTheta;
+	matrix.m[1][0] = xy * (1 - cosTheta) - q.z * sinTheta;
+	matrix.m[2][0] = xz * (1 - cosTheta) + q.y * sinTheta;
 	matrix.m[3][0] = 0.0f;
 
-	matrix.m[0][1] = xy * (1 - cosTheta) + nq.z * sinTheta;
+	matrix.m[0][1] = xy * (1 - cosTheta) + q.z * sinTheta;
 	matrix.m[1][1] = yy * (1 - cosTheta) + cosTheta;
-	matrix.m[2][1] = yz * (1 - cosTheta) - nq.x * sinTheta;
+	matrix.m[2][1] = yz * (1 - cosTheta) - q.x * sinTheta;
 	matrix.m[3][1] = 0.0f;
 
-	matrix.m[0][2] = xz * (1 - cosTheta) - nq.y * sinTheta;
-	matrix.m[1][2] = yz * (1 - cosTheta) + nq.x * sinTheta;
+	matrix.m[0][2] = xz * (1 - cosTheta) - q.y * sinTheta;
+	matrix.m[1][2] = yz * (1 - cosTheta) + q.x * sinTheta;
 	matrix.m[2][2] = zz * (1 - cosTheta) + cosTheta;
 	matrix.m[3][2] = 0.0f;
 
@@ -483,6 +481,51 @@ Matrix4x4 MakeRotateMatrix(const Vector3& axis, float angle)
 	q.w = angle;
 
 	return MakeRotateMatrix(q);
+}
+
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to)
+{
+	Vector3 n;
+	if (!(from == -to)) {
+		n = Normalize(Cross(from, to));
+	}
+	else {
+		n = Normalize(Vector3{ from.y, -from.x, 0.0f });
+	}
+	float cosTheta = Dot(from, to);
+	float sinTheta = Length(Cross(from, to));
+
+	Matrix4x4 matrix;
+
+	float xx = n.x * n.x;
+	float yy = n.y * n.y;
+	float zz = n.z * n.z;
+	float xy = n.x * n.y;
+	float xz = n.x * n.z;
+	float yz = n.y * n.z;
+
+	matrix.m[0][0] = xx * (1 - cosTheta) + cosTheta;
+	matrix.m[1][0] = xy * (1 - cosTheta) - n.z * sinTheta;
+	matrix.m[2][0] = xz * (1 - cosTheta) + n.y * sinTheta;
+	matrix.m[3][0] = 0.0f;
+
+	matrix.m[0][1] = xy * (1 - cosTheta) + n.z * sinTheta;
+	matrix.m[1][1] = yy * (1 - cosTheta) + cosTheta;
+	matrix.m[2][1] = yz * (1 - cosTheta) - n.x * sinTheta;
+	matrix.m[3][1] = 0.0f;
+
+	matrix.m[0][2] = xz * (1 - cosTheta) - n.y * sinTheta;
+	matrix.m[1][2] = yz * (1 - cosTheta) + n.x * sinTheta;
+	matrix.m[2][2] = zz * (1 - cosTheta) + cosTheta;
+	matrix.m[3][2] = 0.0f;
+
+	matrix.m[0][3] = 0.0f;
+	matrix.m[1][3] = 0.0f;
+	matrix.m[2][3] = 0.0f;
+	matrix.m[3][3] = 1.0f;
+
+	return matrix;
+
 }
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {

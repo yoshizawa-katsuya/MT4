@@ -1,4 +1,7 @@
 #include <Novice.h>
+#include "Struct.h"
+#include "Vector.h"
+#include "Matrix.h"
 
 const char kWindowTitle[] = "LE2B_24_ヨシザワ_カツヤ";
 
@@ -11,6 +14,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// キー入力結果を受け取る箱
 	char keys[256] = {0};
 	char preKeys[256] = {0};
+
+	Vector3 axis = Normalize({ 1.0f, 1.0f, 1.0f });
+	float angle = 0.44f;
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(axis, angle);
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -32,6 +39,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
+
+		MatrixScreenPrintf(0, 0, rotateMatrix, "rotateMatrix");
 
 		///
 		/// ↑描画処理ここまで

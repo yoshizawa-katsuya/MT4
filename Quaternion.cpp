@@ -1,4 +1,5 @@
 #include "Quaternion.h"
+#include <Novice.h>
 
 Quaternion Add(const Quaternion& q1, const Quaternion& q2)
 {
@@ -15,8 +16,8 @@ Quaternion Add(const Quaternion& q1, const Quaternion& q2)
 }
 
 Quaternion Normalize(const Quaternion& q) {
-	float magnitude = std::sqrt(q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z);
-	return { q.x / magnitude, q.y / magnitude, q.z / magnitude, q.w / magnitude };
+	float norm = Norm(q);
+	return q / norm;
 }
 
 float Dot(const Quaternion& q1, const Quaternion& q2)
@@ -41,13 +42,64 @@ Quaternion Multiply(float scalar, const Quaternion& q)
 
 }
 
-float Length(const Quaternion& q)
+Quaternion Multiply(const Quaternion& q1, const Quaternion& q2)
+{
+	Quaternion anser;
+
+	anser.w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
+	anser.x = q1.y * q2.z - q1.z * q2.y + q1.x * q2.w + q1.w * q2.x;
+	anser.y = q1.z * q2.x - q1.x * q2.z + q1.y * q2.w + q1.w * q2.y;
+	anser.z = q1.x * q2.y - q1.y * q2.x + q1.z * q2.w + q1.w * q2.z;
+
+	return anser;
+}
+
+Quaternion IdentityQuaternion()
+{
+	Quaternion anser;
+
+	anser.w = 1.0f;
+	anser.x = 0.0f;
+	anser.y = 0.0f;
+	anser.z = 0.0f;
+
+	return anser;
+}
+
+Quaternion Conjugate(const Quaternion& quaternion)
+{
+	Quaternion anser;
+
+	anser.w = quaternion.w;
+	anser.x = -quaternion.x;
+	anser.y = -quaternion.y;
+	anser.z = -quaternion.z;
+
+	return anser;
+}
+
+Quaternion Inverse(const Quaternion& quaternion)
+{
+	float norm = Norm(quaternion);
+	return Conjugate(quaternion) / (norm * norm);
+}
+
+float Norm(const Quaternion& q)
 {
 	float anser;
 	anser = sqrtf(Dot(q, q));
 
 	return anser;
 
+}
+
+void QuaternionScreenPrintf(int x, int y, const Quaternion& quaternion, const char* label)
+{
+	Novice::ScreenPrintf(x, y, "%.02f", quaternion.x);
+	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", quaternion.y);
+	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", quaternion.z);
+	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%.02f", quaternion.w);
+	Novice::ScreenPrintf(x + kColumnWidth * 4, y, "%s", label);
 }
 
 Quaternion operator+(const Quaternion& q1, const Quaternion& q2)

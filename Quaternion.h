@@ -13,8 +13,22 @@ float Dot(const Quaternion& q1, const Quaternion& q2);
 //スカラー倍
 Quaternion Multiply(float scalar, const Quaternion& q);
 
+//Quaternionの積
+Quaternion Multiply(const Quaternion& q1, const Quaternion& q2);
+
+//単位Quaternion
+Quaternion IdentityQuaternion();
+
+//共役Quaternion
+Quaternion Conjugate(const Quaternion& quaternion);
+
+//逆Quaternion
+Quaternion Inverse(const Quaternion& quaternion);
+
 //長さ(ノルム)
-float Length(const Quaternion& q);
+float Norm(const Quaternion& q);
+
+void QuaternionScreenPrintf(int x, int y, const Quaternion& quaternion, const char* label);
 
 Quaternion operator+(const Quaternion& q1, const Quaternion& q2);
 

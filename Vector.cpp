@@ -123,7 +123,7 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
 	Vector3 o = segment.origin;
 	Vector3 a = Subtract(point, o);
 	Vector3 b = segment.diff;
-	float bLength = Length(b);
+	float bLength = Norm(b);
 
 	float t = Dot(a, b) / (bLength * bLength);
 

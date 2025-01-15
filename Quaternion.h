@@ -28,6 +28,10 @@ Quaternion Inverse(const Quaternion& quaternion);
 //長さ(ノルム)
 float Norm(const Quaternion& q);
 
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
+
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
+
 void QuaternionScreenPrintf(int x, int y, const Quaternion& quaternion, const char* label);
 
 Quaternion operator+(const Quaternion& q1, const Quaternion& q2);

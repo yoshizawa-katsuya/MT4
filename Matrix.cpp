@@ -412,56 +412,33 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 Matrix4x4 MakeRotateMatrix(const Quaternion& q)
 {
 
+	Quaternion nq = Normalize(q);
+
 	Matrix4x4 matrix;
-	
-	float xx = q.x * q.x;
-	float yy = q.y * q.y;
-	float zz = q.z * q.z;
-	float xy = q.x * q.y;
-	float xz = q.x * q.z;
-	float yz = q.y * q.z;
 
-	float cosTheta = std::cos(q.w);
-	float sinTheta = std::sin(q.w);
+	float xx = nq.x * nq.x;
+	float yy = nq.y * nq.y;
+	float zz = nq.z * nq.z;
+	float xy = nq.x * nq.y;
+	float xz = nq.x * nq.z;
+	float yz = nq.y * nq.z;
+	float wx = nq.w * nq.x;
+	float wy = nq.w * nq.y;
+	float wz = nq.w * nq.z;
 
-	//float wx = q.w * q.x;
-	//float wy = q.w * q.y;
-	//float wz = q.w * q.z;
-	/*
 	matrix.m[0][0] = 1.0f - 2.0f * (yy + zz);
-	matrix.m[0][1] = 2.0f * (xy - wz);
-	matrix.m[0][2] = 2.0f * (xz + wy);
-	matrix.m[0][3] = 0.0f;
+	matrix.m[1][0] = 2.0f * (xy - wz);
+	matrix.m[2][0] = 2.0f * (xz + wy);
+	matrix.m[3][0] = 0.0f;
 
-	matrix.m[1][0] = 2.0f * (xy + wz);
+	matrix.m[0][1] = 2.0f * (xy + wz);
 	matrix.m[1][1] = 1.0f - 2.0f * (xx + zz);
-	matrix.m[1][2] = 2.0f * (yz - wx);
-	matrix.m[1][3] = 0.0f;
+	matrix.m[2][1] = 2.0f * (yz - wx);
+	matrix.m[3][1] = 0.0f;
 
-	matrix.m[2][0] = 2.0f * (xz - wy);
-	matrix.m[2][1] = 2.0f * (yz + wx);
+	matrix.m[0][2] = 2.0f * (xz - wy);
+	matrix.m[1][2] = 2.0f * (yz + wx);
 	matrix.m[2][2] = 1.0f - 2.0f * (xx + yy);
-	matrix.m[2][3] = 0.0f;
-
-	matrix.m[3][0] = 0.0f;
-	matrix.m[3][1] = 0.0f;
-	matrix.m[3][2] = 0.0f;
-	matrix.m[3][3] = 1.0f;
-	*/
-
-	matrix.m[0][0] = xx * (1 - cosTheta) + cosTheta;
-	matrix.m[1][0] = xy * (1 - cosTheta) - q.z * sinTheta;
-	matrix.m[2][0] = xz * (1 - cosTheta) + q.y * sinTheta;
-	matrix.m[3][0] = 0.0f;
-
-	matrix.m[0][1] = xy * (1 - cosTheta) + q.z * sinTheta;
-	matrix.m[1][1] = yy * (1 - cosTheta) + cosTheta;
-	matrix.m[2][1] = yz * (1 - cosTheta) - q.x * sinTheta;
-	matrix.m[3][1] = 0.0f;
-
-	matrix.m[0][2] = xz * (1 - cosTheta) - q.y * sinTheta;
-	matrix.m[1][2] = yz * (1 - cosTheta) + q.x * sinTheta;
-	matrix.m[2][2] = zz * (1 - cosTheta) + cosTheta;
 	matrix.m[3][2] = 0.0f;
 
 	matrix.m[0][3] = 0.0f;
@@ -474,13 +451,39 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& q)
 
 Matrix4x4 MakeRotateMatrix(const Vector3& axis, float angle)
 {
-	Quaternion q;
-	q.x = axis.x;
-	q.y = axis.y;
-	q.z = axis.z;
-	q.w = angle;
+	Matrix4x4 matrix;
 
-	return MakeRotateMatrix(q);
+	float xx = axis.x * axis.x;
+	float yy = axis.y * axis.y;
+	float zz = axis.z * axis.z;
+	float xy = axis.x * axis.y;
+	float xz = axis.x * axis.z;
+	float yz = axis.y * axis.z;
+
+	float cosTheta = std::cos(angle);
+	float sinTheta = std::sin(angle);
+
+	matrix.m[0][0] = xx * (1 - cosTheta) + cosTheta;
+	matrix.m[1][0] = xy * (1 - cosTheta) - axis.z * sinTheta;
+	matrix.m[2][0] = xz * (1 - cosTheta) + axis.y * sinTheta;
+	matrix.m[3][0] = 0.0f;
+
+	matrix.m[0][1] = xy * (1 - cosTheta) + axis.z * sinTheta;
+	matrix.m[1][1] = yy * (1 - cosTheta) + cosTheta;
+	matrix.m[2][1] = yz * (1 - cosTheta) - axis.x * sinTheta;
+	matrix.m[3][1] = 0.0f;
+
+	matrix.m[0][2] = xz * (1 - cosTheta) - axis.y * sinTheta;
+	matrix.m[1][2] = yz * (1 - cosTheta) + axis.x * sinTheta;
+	matrix.m[2][2] = zz * (1 - cosTheta) + cosTheta;
+	matrix.m[3][2] = 0.0f;
+
+	matrix.m[0][3] = 0.0f;
+	matrix.m[1][3] = 0.0f;
+	matrix.m[2][3] = 0.0f;
+	matrix.m[3][3] = 1.0f;
+
+	return matrix;
 }
 
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to)

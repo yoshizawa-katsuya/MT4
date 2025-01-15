@@ -93,6 +93,38 @@ float Norm(const Quaternion& q)
 
 }
 
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle)
+{
+	Quaternion q;
+
+	float halfCosTheta = std::cos(angle / 2.0f);
+	float halfSinTheta = std::sin(angle / 2.0f);
+
+	q.x = axis.x * halfSinTheta;
+	q.y = axis.y * halfSinTheta;
+	q.z = axis.z * halfSinTheta;
+	q.w = halfCosTheta;
+
+	return Normalize(q);
+}
+
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion)
+{
+	Quaternion vectorQ;
+	vectorQ.x = vector.x;
+	vectorQ.y = vector.y;
+	vectorQ.z = vector.z;
+	vectorQ.w = 0.0f;
+
+	Vector3 anser;
+	Quaternion q = Multiply(Multiply(quaternion, vectorQ), Conjugate(quaternion));
+	anser.x = q.x;
+	anser.y = q.y;
+	anser.z = q.z;
+
+	return anser;
+}
+
 void QuaternionScreenPrintf(int x, int y, const Quaternion& quaternion, const char* label)
 {
 	Novice::ScreenPrintf(x, y, "%.02f", quaternion.x);

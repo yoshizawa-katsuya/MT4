@@ -1,5 +1,5 @@
 #include "Vector.h"
-
+#include <Novice.h>
 
 Vector2 Subtract(const Vector2& v1, const Vector2& v2)
 {
@@ -88,14 +88,14 @@ Vector3 Normalize(const Vector3& v) {
 	return anser;
 
 }
-/*
+
 void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
 	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", vector.y);
 	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", vector.z);
 	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%s", label);
 }
-*/
+
 Vector3 Cross(const Vector3& v1, const Vector3& v2) {
 
 	Vector3 v;

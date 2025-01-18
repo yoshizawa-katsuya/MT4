@@ -139,6 +139,11 @@ Quaternion operator+(const Quaternion& q1, const Quaternion& q2)
 	return Add(q1, q2);
 }
 
+Quaternion operator-(const Quaternion& q)
+{
+	return { -q.x, -q.y, -q.z, -q.w };
+}
+
 Quaternion operator*(float s, const Quaternion& q)
 {
 	return Multiply(s, q);

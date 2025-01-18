@@ -36,6 +36,8 @@ void QuaternionScreenPrintf(int x, int y, const Quaternion& quaternion, const ch
 
 Quaternion operator+(const Quaternion& q1, const Quaternion& q2);
 
+Quaternion operator-(const Quaternion& q);
+
 Quaternion operator*(float s, const Quaternion& q);
 
 Quaternion operator*(const Quaternion& q, float s);
